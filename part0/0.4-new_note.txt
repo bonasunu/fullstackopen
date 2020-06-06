@@ -1,0 +1,13 @@
+Form and HTTP Post
+
+Browser->Server: Submit button is clicked (HTTP POST to /new_note route)
+Server->Browser: POST data (req.body) is added to an array 
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+Server-->Browser: main.js
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+Server-->Browser: data.json
+
+note over Browser:
+Data is sent as the body of the POST-request.
