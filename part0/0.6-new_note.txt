@@ -1,0 +1,4 @@
+New Note
+
+Browser->Server: Submit button is clicked (HTTP POST to /new_note_spa)
+Server->Browser: POST JSON-data is added to an array using JavaScript on spa.js. Then it rerenders the note list on the page.
