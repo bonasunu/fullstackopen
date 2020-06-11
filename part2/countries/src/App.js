@@ -40,6 +40,39 @@ const App = () => {
         </div>
     )
   }
+  else if (countries.filter(result).length > 1 && filter.toLowerCase() === 'sudan') {
+    return (
+        <div>
+            find countries <input value={filter} onChange={handleFilterChange}/>
+              <p>Sudan</p>
+        </div>
+    )
+  }
+  else if (countries.filter(result).length > 1 && filter.toLowerCase() === 'india') {
+    return (
+        <div>
+            find countries <input value={filter} onChange={handleFilterChange}/>
+              <p>India</p>
+        </div>
+    )
+  }
+  else if (countries.filter(result).length === 1){
+    return (
+        <div>
+            find countries <input value={filter} onChange={handleFilterChange}/>
+              {countries.filter(result)
+                  .map(country =>
+                <>
+                    <p key={country.name}>
+                        {country.name}
+                        {country.capital}
+                    </p>
+                    <p key={country.name}></p>
+                </>
+              )}
+        </div>
+    )
+  }
   else if (countries.filter(result).length <= 10) {
     return (
         <div>
@@ -51,17 +84,7 @@ const App = () => {
         </div>
     )
   }
-  else if (countries.filter(result).length === 1){
-    return (
-        <div>
-            find countries <input value={filter} onChange={handleFilterChange}/>
-              {countries.filter(result)
-                  .map(country =>
-                <p key={country.name}>{country.name}</p>
-              )}
-        </div>
-    )
-  }
+  
 
 }
 
