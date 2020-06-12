@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Weather from './components/Weather'
 
 const App = () => {
   const [ countries, setCountries ] = useState([]) 
@@ -14,7 +15,7 @@ const App = () => {
             setCountries(response.data);
         })
   }, []);
-  console.log('render', countries.length, 'notes')
+  console.log('render', countries.length, 'notes')  
 
   const result = (country) => country.name
     .toLowerCase()
@@ -23,6 +24,11 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
+  }
+
+  const showCountry = (event) => {
+    event.preventDefault()
+    setFilter(event.target.value)
   }
 
   if (countries.filter(result).length === countries.length) {
@@ -40,35 +46,27 @@ const App = () => {
         </div>
     )
   }
-  else if (countries.filter(result).length > 1 && filter.toLowerCase() === 'sudan') {
-    return (
-        <div>
-            find countries <input value={filter} onChange={handleFilterChange}/>
-              <p>Sudan</p>
-        </div>
-    )
-  }
-  else if (countries.filter(result).length > 1 && filter.toLowerCase() === 'india') {
-    return (
-        <div>
-            find countries <input value={filter} onChange={handleFilterChange}/>
-              <p>India</p>
-        </div>
-    )
-  }
   else if (countries.filter(result).length === 1){
+    //newCapital('Jakarta')
+
     return (
         <div>
             find countries <input value={filter} onChange={handleFilterChange}/>
               {countries.filter(result)
                   .map(country =>
-                <>
-                    <p key={country.name}>
-                        {country.name}
-                        {country.capital}
-                    </p>
-                    <p key={country.name}></p>
-                </>
+                <div key={country.name}>
+                  <h1>{country.name}</h1>
+                  <p>capital {country.capital}</p>
+                  <p>population {country.population}</p>
+                  <h2>languages</h2>
+                  <ul>
+                    {country.languages.map(lang => 
+                      <li key={lang.name}>{lang.name}</li>
+                    )}
+                  </ul>
+                  <img src={country.flag} alt={country.name}/>
+                    <Weather capital={country.capital} />
+                </div>               
               )}
         </div>
     )
@@ -79,12 +77,14 @@ const App = () => {
             find countries <input value={filter} onChange={handleFilterChange}/>
               {countries.filter(result)
                   .map(country =>
-                  <p key={country.name}>{country.name}</p>
+                    <div key={country.name}>
+                      <p>{country.name} </p>
+                      <button onClick={showCountry} value={country.name}>Show</button>
+                    </div>
               )}
         </div>
     )
   }
-  
 
 }
 
