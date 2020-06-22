@@ -3,35 +3,21 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const Blog = require('../models/blog')
 const app = require('../app')
+const helper = require('./blog_helpers')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
 jest.setTimeout(10000)
 
 const api = supertest(app)
 
-const listHelper = require('../utils/list_helpers')
-
-const bloglist = [ 
-    { 
-        title: "React patterns", 
-        author: "Michael Chan", 
-        url: "https://reactpatterns.com/", 
-        likes: 7 
-    }, 
-    { 
-        title: "Go To Statement Considered Harmful", 
-        author: "Edsger W. Dijkstra", 
-        url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html", 
-        likes: 5
-    }
-]
-
 beforeEach(async () => {
     await Blog.deleteMany({})
 
-    let newBlog = new Blog(bloglist[0])
+    let newBlog = new Blog(helper.bloglist[0])
     await newBlog.save()
 
-    newBlog = new Blog(bloglist[1])
+    newBlog = new Blog(helper.bloglist[1])
     await newBlog.save()
 })
 
@@ -105,14 +91,14 @@ describe('new blog', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
-            .expect(201)
+            .expect(200)
             .expect('Content-Type', /application\/json/)
 
         const response = await api.get('/api/blogs')
 
         const contents = response.body.map(r => r.title)
 
-        expect(response.body).toHaveLength(bloglist.length + 1)
+        expect(response.body).toHaveLength(helper.bloglist.length + 1)
         expect(contents).toContain('Type wars')
     })
 
@@ -129,7 +115,59 @@ describe('new blog', () => {
 
         const response = await api.get('/api/blogs')
 
-        expect(response.body).toHaveLength(bloglist.length)
+        expect(response.body).toHaveLength(helper.bloglist.length)
+    })
+})
+
+describe('when there is initially one user in db', () => {
+    beforeEach(async () => {
+        await User.deleteMany({})
+
+        const passwordHash = await bcrypt.hash('sekret', 10)
+        const user = new User({ username: 'root', passwordHash})
+
+        await user.save()
+    })
+
+    test('creation succeeds with a fresh username', async ()=> {
+        const userAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'mandy',
+            name: 'Mandy CJ',
+            password: 'aaaaa'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const userAtEnd = await helper.usersInDb()
+        expect(userAtEnd).toHaveLength(userAtStart.length + 1)
+
+        const usernames = userAtEnd.map(u => u.username)
+        expect(usernames).toContain(newUser.username)
+    })
+
+    test('creation fails with proper statuscode and message if username already taken', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'root',
+            name: 'Superuser',
+            password: 'aaaaa',
+        }
+
+        const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
     })
 })
 
