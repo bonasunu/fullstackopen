@@ -80,43 +80,49 @@ describe('test json', () => {
 })
 
 describe('new blog', () => {
-    test('a valid blog can be added', async () => {
+    //TODO
+    test('a valid blog without valid token cannot be added', async () => {
         const newBlog = {
             title: "Type wars", 
             author: "Robert C. Martin", 
             url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html", 
-            likes: 2
+            likes: 2,
+            userId: '5ef0dbb20da8bd0bfe6df29d'
         }
 
         await api
             .post('/api/blogs')
             .send(newBlog)
-            .expect(200)
+            .expect(401)
             .expect('Content-Type', /application\/json/)
 
         const response = await api.get('/api/blogs')
 
         const contents = response.body.map(r => r.title)
 
-        expect(response.body).toHaveLength(helper.bloglist.length + 1)
-        expect(contents).toContain('Type wars')
+        expect(response.body).toHaveLength(helper.bloglist.length)
+        //expect(contents).toContain('Type wars')
     })
 
-    test('blog without title and url is not added', async () => {
+    //TODO
+    test('blog without valid token, title and url is not added', async () => {
         const newBlog = {
             author: "Robert C. Martin", 
-            likes: 4
+            likes: 4,
+            userId: '5ef0dbb20da8bd0bfe6df29d'
         }
 
         await api
             .post('/api/blogs')
             .send(newBlog)
-            .expect(400)
+            .expect(401)
 
         const response = await api.get('/api/blogs')
 
         expect(response.body).toHaveLength(helper.bloglist.length)
     })
+
+    //TODO test('delete')
 })
 
 describe('when there is initially one user in db', () => {
@@ -164,6 +170,26 @@ describe('when there is initially one user in db', () => {
         .post('/api/users')
         .send(newUser)
         .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+
+    test('creation fails with proper statuscode and message if password less than 3 characters', async () => {
+        
+        const usersAtStart = await helper.usersInDb()
+        
+        const newUser = {
+            username: 'jane',
+            name: 'Jane Doe',
+            password: 'a'
+        }
+
+        const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(401)
         .expect('Content-Type', /application\/json/)
 
         const usersAtEnd = await helper.usersInDb()
