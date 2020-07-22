@@ -14,6 +14,7 @@ const App = () => {
   const [url, setUrl] = useState('')
   // eslint-disable-next-line no-unused-vars
   const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -32,6 +33,30 @@ const App = () => {
     }
   }, [])
 
+  const Notification = ({ message }) => {
+    if (message == null) {
+      return null
+    }
+
+    return (
+      <div className='notification'>
+        { message }
+      </div>
+    )
+  }
+
+  const ErrorMessage = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+
+    return (
+      <div className='errorMessage'>
+        { message }
+      </div>
+    )
+  }
+
   const handleLogin = async event => {
     event.preventDefault()
     try {
@@ -48,7 +73,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorMessage('Wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -88,22 +113,33 @@ const App = () => {
   
   const handleCreateBlog = (event) => {
     event.preventDefault()
-
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url
+    try {
+      const newBlog = {
+        title: title,
+        author: author,
+        url: url
+      }
+  
+      console.log(user.token)
+      blogService
+        .createBlog(newBlog)
+        .then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog))
+          setTitle('')
+          setAuthor('')
+          setUrl('')
+          setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+    } catch (exception) {
+      setErrorMessage('Blog creation failed')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
-
-    console.log(user.token)
-    blogService
-      .createBlog(newBlog)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-      })
+    
   }
 
   const newBlogForm = () => (
@@ -144,13 +180,14 @@ const App = () => {
 
   return (
     <div>
-
+      <ErrorMessage message={errorMessage} />
       {user === null ?
         <>
         <h2>Log in to application</h2>
         {loginForm()}
         </> :
         <>
+          <Notification message={message}/>
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
           <br></br>
