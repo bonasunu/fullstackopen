@@ -5,6 +5,23 @@ const App = () => {
   const anecdotes = useSelector((state) => state)
   const dispatch = useDispatch()
 
+  const vote = (id) => {
+    dispatch({
+      type: 'VOTE',
+      data: id,
+    })
+  }
+
+  const newAnecdote = (event) => {
+    event.preventDefault()
+    const content = event.target.anecdote.value
+    event.target.anecdote.value = ''
+    dispatch({
+      type: 'NEW',
+      data: content,
+    })
+  }
+
   return (
     <div>
       <h2>Anecdotes</h2>
@@ -13,18 +30,14 @@ const App = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button
-              onClick={() => dispatch({ type: 'VOTE', data: anecdote.id })}
-            >
-              vote
-            </button>
+            <button onClick={() => vote(anecdote.id)}>vote</button>
           </div>
         </div>
       ))}
       <h2>create new</h2>
-      <form>
+      <form onSubmit={newAnecdote}>
         <div>
-          <input />
+          <input name="anecdote" />
         </div>
         <button>create</button>
       </form>
