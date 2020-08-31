@@ -21,6 +21,7 @@ const AnecdoteList = () => {
               onClick={() => {
                 dispatch(newVote(anecdote.id))
                 dispatch(voteInfo(anecdote.content))
+                setTimeout(() => dispatch(voteInfo('')), 5000)
               }}
             >
               vote

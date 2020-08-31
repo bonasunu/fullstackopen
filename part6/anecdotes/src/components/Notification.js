@@ -9,6 +9,11 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1,
   }
+
+  if (info === '') {
+    return null
+  }
+
   return <div style={style}>You voted '{info}'</div>
 }
 
