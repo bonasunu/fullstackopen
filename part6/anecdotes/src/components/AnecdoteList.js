@@ -27,8 +27,7 @@ const AnecdoteList = () => {
             <button
               onClick={() => {
                 dispatch(newVote(anecdote.id))
-                dispatch(voteInfo(anecdote.content))
-                setTimeout(() => dispatch(voteInfo('')), 5000)
+                dispatch(voteInfo(`You voted "${anecdote.content}"`, 5))
               }}
             >
               vote

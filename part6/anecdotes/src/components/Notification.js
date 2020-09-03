@@ -14,7 +14,7 @@ const Notification = () => {
     return null
   }
 
-  return <div style={style}>You voted '{info}'</div>
+  return <div style={style}>{info}</div>
 }
 
 export default Notification

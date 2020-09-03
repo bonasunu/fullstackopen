@@ -3,15 +3,21 @@ const notificationReducer = (state = '', action) => {
     case 'VOTE_INFO':
       state = action.data
       return state
-    default:
+    case 'REMOVE_INFO':
       return ''
+    default:
+      return state
   }
 }
 
-export const voteInfo = (content) => {
-  return {
-    type: 'VOTE_INFO',
-    data: content,
+export const voteInfo = (content, time) => {
+  return async (dispatch) => {
+    await dispatch({ type: 'VOTE_INFO', data: content })
+    setTimeout(() => {
+      dispatch({
+        type: 'REMOVE_INFO',
+      })
+    }, time * 1000)
   }
 }
 

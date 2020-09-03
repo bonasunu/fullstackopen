@@ -30,13 +30,16 @@ export const HandleNewAnecdote = (anecdote) => {
 }
 
 export const newVote = (id) => {
-  return {
-    type: 'VOTE',
-    data: id,
+  return async (dispatch) => {
+    await anecdotesService.updateItem(id)
+    dispatch({
+      type: 'VOTE',
+      data: id,
+    })
   }
 }
 
-export const initializeAnecdotes = (anecdotes) => {
+export const initializeAnecdotes = () => {
   return async (dispatch) => {
     const anecdotes = await anecdotesService.getAll()
     dispatch({ type: 'INIT_ANECDOTES', data: anecdotes })
