@@ -1,6 +1,4 @@
-import { asObject } from './store'
-
-// const initialState = anecdotesAtStart.map(asObject)
+import anecdotesService from '../services/anecdotes'
 
 const reducer = (state = [], action) => {
   console.log('state now: ', state)
@@ -9,7 +7,6 @@ const reducer = (state = [], action) => {
   switch (action.type) {
     case 'NEW':
       console.log('New anecdotes')
-      //const newObj = asObject(action.data)
       return state.concat(action.data)
     case 'VOTE':
       const toChange = state.find((n) => n.id === action.data)
@@ -26,9 +23,9 @@ const reducer = (state = [], action) => {
 }
 
 export const HandleNewAnecdote = (anecdote) => {
-  return {
-    type: 'NEW',
-    data: anecdote,
+  return async (dispatch) => {
+    const newObj = await anecdotesService.createNew(anecdote)
+    dispatch({ type: 'NEW', data: newObj })
   }
 }
 
@@ -40,9 +37,9 @@ export const newVote = (id) => {
 }
 
 export const initializeAnecdotes = (anecdotes) => {
-  return {
-    type: 'INIT_ANECDOTES',
-    data: anecdotes,
+  return async (dispatch) => {
+    const anecdotes = await anecdotesService.getAll()
+    dispatch({ type: 'INIT_ANECDOTES', data: anecdotes })
   }
 }
 
