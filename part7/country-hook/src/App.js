@@ -30,6 +30,10 @@ const useCountry = (name) => {
           })
         }
       })
+      .catch((error) => {
+        console.log(error)
+        setCountry({ found: false })
+      })
   }, [name])
 
   return country
