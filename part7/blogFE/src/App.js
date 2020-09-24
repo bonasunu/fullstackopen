@@ -4,7 +4,6 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import NewBlog from './components/NewBlog'
 import blogService from './services/blogs'
-// import loginService from './services/login'
 import storage from './utils/storage'
 import { useDispatch, useSelector } from 'react-redux'
 import { notify } from './reducers/notificationReducer'
@@ -12,7 +11,6 @@ import { initBlogs, updateBlog, removeBlog } from './reducers/blogsReducer'
 import { loadUser, signoutUser } from './reducers/userReducer'
 
 const App = () => {
-  //const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
