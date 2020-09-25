@@ -4,6 +4,8 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import NewBlog from './components/NewBlog'
 import Userslist from './components/UsersList'
+import UserDetail from './components/UserDetail'
+import BlogDetail from './components/BlogDetail'
 import blogService from './services/blogs'
 import storage from './utils/storage'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +13,7 @@ import { notify } from './reducers/notificationReducer'
 import { initBlogs, updateBlog, removeBlog } from './reducers/blogsReducer'
 import { loadUser, signoutUser } from './reducers/userReducer'
 import { loadUsers } from './reducers/usersReducer'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -23,6 +25,7 @@ const App = () => {
   const blogFormRef = React.createRef()
 
   useEffect(() => {
+    dispatch(loadUsers())
     dispatch(initBlogs())
     dispatch(loadUsers())
     const user = storage.loadUser()
@@ -85,6 +88,10 @@ const App = () => {
     storage.logoutUser()
   }
 
+  const padding = {
+    padding: 5,
+  }
+
   if (!user) {
     return (
       <div>
@@ -119,13 +126,28 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
-      <Notification />
-      <p>
-        {user.name} logged in <button onClick={handleLogout}>logout</button>
-      </p>
       <Router>
+        <div>
+          <Link style={padding} to="/">
+            blogs
+          </Link>
+          <Link style={padding} to="/users">
+            users
+          </Link>
+          <p>
+            {user.name} logged in <button onClick={handleLogout}>logout</button>
+          </p>
+        </div>
+        <h2>blogs</h2>
+        <Notification />
+
         <Switch>
+          <Route path="/users/:id">
+            <UserDetail />
+          </Route>
+          <Route path="/blogs/:id">
+            <BlogDetail />
+          </Route>
           <Route path="/users">
             <Userslist />
           </Route>
