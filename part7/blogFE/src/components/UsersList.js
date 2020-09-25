@@ -3,6 +3,10 @@ import { useSelector } from 'react-redux'
 
 const UsersList = () => {
   const users = useSelector((state) => state.users)
+  const padding = {
+    padding: 5,
+    margin: 5,
+  }
 
   return (
     <>
@@ -10,13 +14,13 @@ const UsersList = () => {
       <table>
         <tr>
           <th></th>
-          <th>blogs created</th>
+          <th style={padding}>blogs created</th>
         </tr>
 
         {users.map((user) => (
           <tr>
             <td>{user.name}</td>
-            <td>{user.blogs.length}</td>
+            <td style={padding}>{user.blogs.length}</td>
           </tr>
         ))}
       </table>
