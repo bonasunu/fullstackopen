@@ -8,11 +8,17 @@ const UserDetail = () => {
   console.log(user)
   console.log(user[0])
 
-  if (!user) return null
+  if (!user[0]) return null
 
   return (
     <>
-      <h2>{id}</h2>
+      <h2>{user[0].name}</h2>
+      <h5>added blogs</h5>
+      <ul>
+        {user[0].blogs.map((blog) => (
+          <li>{blog.title}</li>
+        ))}
+      </ul>
     </>
   )
 }
