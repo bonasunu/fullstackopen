@@ -10,7 +10,7 @@ import blogService from './services/blogs'
 import storage from './utils/storage'
 import { useDispatch, useSelector } from 'react-redux'
 import { notify } from './reducers/notificationReducer'
-import { initBlogs, updateBlog, removeBlog } from './reducers/blogsReducer'
+import { initBlogs } from './reducers/blogsReducer'
 import { loadUser, signoutUser } from './reducers/userReducer'
 import { loadUsers } from './reducers/usersReducer'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
@@ -60,26 +60,6 @@ const App = () => {
       )
     } catch (exception) {
       console.log(exception)
-    }
-  }
-
-  const handleLike = async (id) => {
-    const blogToLike = blogs.find((b) => b.id === id)
-    const likedBlog = {
-      ...blogToLike,
-      likes: blogToLike.likes + 1,
-      user: blogToLike.user.id,
-    }
-    dispatch(updateBlog(likedBlog))
-  }
-
-  const handleRemove = async (id) => {
-    const blogToRemove = blogs.find((b) => b.id === id)
-    const ok = window.confirm(
-      `Remove blog ${blogToRemove.title} by ${blogToRemove.author}`
-    )
-    if (ok) {
-      dispatch(removeBlog(id))
     }
   }
 
@@ -156,13 +136,7 @@ const App = () => {
               <NewBlog createBlog={createBlog} />
             </Togglable>
             {blogs.sort(byLikes).map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                handleLike={handleLike}
-                handleRemove={handleRemove}
-                own={user.username === blog.user.username}
-              />
+              <Blog key={blog.id} blog={blog} />
             ))}
           </Route>
         </Switch>
