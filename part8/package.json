@@ -2,5 +2,13 @@
   "name": "part8",
   "version": "1.0.0",
   "main": "library-backend.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.18.2",
+    "graphql": "^15.3.0",
+    "nodemon": "^2.0.5"
+  },
+  "scripts": {
+    "dev": "nodemon library-backend.js"
+  }
 }
