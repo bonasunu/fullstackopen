@@ -107,6 +107,7 @@ const typeDefs = gql`
     allAuthors: [Authors!]!
   }
 
+  # prettier-ignore
   type Mutation {
     addBook(
       title: String!
@@ -114,6 +115,10 @@ const typeDefs = gql`
       author: String!
       genres: [String!]!
     ): Books
+    editAuthor(
+      name: String! 
+      setBornTo: Int!
+    ): Authors
   }
 `
 
@@ -147,9 +152,6 @@ const resolvers = {
         })
       }
 
-      const book = { ...args, id: uuid() }
-      books = books.concat(book)
-
       if (!authors.find((a) => a.name === args.author)) {
         const author = {
           name: args.author,
@@ -158,7 +160,19 @@ const resolvers = {
         authors = authors.concat(author)
       }
 
+      const book = { ...args, id: uuid() }
+      books = books.concat(book)
+
       return book
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find((a) => a.name === args.name)
+      if (!author) return null
+
+      const updatedAuthor = { ...author, born: args.setBornTo }
+      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a))
+
+      return updatedAuthor
     },
   },
 }
