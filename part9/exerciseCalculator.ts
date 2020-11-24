@@ -5,14 +5,20 @@ interface inputExercise {
 
 const parseArgsExercise = (args: Array<string>): inputExercise => {
   if (args.length < 4) throw new Error('Not enough arguments')
-  if (args.length > 5) throw new Error('Too many arguments')
 
-  if (!isNaN(Number(args[3])) && Array.isArray(args[2])) {
+  const arr: Array<number> = []
+
+  for (let i = 2; i < args.length - 1; i++) {
+    if (!isNaN(Number(args[i]))) arr.push(Number(args[i]))
+    else throw new Error('Please use number for input!')
+  }
+
+  if (!isNaN(Number(args[args.length - 1]))) {
     return {
-      inputDays: args[2],
-      inputTargetHours: Number(args[3]),
+      inputDays: arr,
+      inputTargetHours: Number(args[args.length - 1]),
     }
-  } else throw new Error('Please provide array and number!')
+  } else throw new Error('Please provide number for target hours!')
 }
 
 interface exerciseResult {
@@ -58,7 +64,6 @@ const calculateExercise = (
   return result
 }
 
-// console.log(calculateExercise([3, 0, 2, 4.5, 0, 3, 1], 2))
 try {
   const { inputDays, inputTargetHours } = parseArgsExercise(process.argv)
   console.log(calculateExercise(inputDays, inputTargetHours))
