@@ -47,17 +47,30 @@ const calculateExercise = (
     average: average,
   }
 
-  switch (true) {
-    case average / targetHours >= 1:
-      result.rating = 3
-      result.ratingDescription = 'You did a great job!'
-    case average / targetHours < 0.5:
-      result.rating = 1
-      result.ratingDescription = 'Too bad> Do better!'
-    case average / targetHours >= 0.5:
-      result.rating = 2
-      result.ratingDescription = 'You are doing good! Keep going!'
+  const averageHours: number = average / targetHours
+
+  if (averageHours >= 1) {
+    result.rating = 3
+    result.ratingDescription = 'You did a great job!'
+  } else if (averageHours < 0.5) {
+    result.rating = 1
+    result.ratingDescription = 'Too bad> Do better!'
+  } else if (averageHours >= 0.5) {
+    result.rating = 2
+    result.ratingDescription = 'You are doing good! Keep going!'
   }
+
+  // switch (averageHours) {
+  //   case average / targetHours >= 1:
+  //     result.rating = 3
+  //     result.ratingDescription = 'You did a great job!'
+  //   case average / targetHours < 0.5:
+  //     result.rating = 1
+  //     result.ratingDescription = 'Too bad> Do better!'
+  //   case average / targetHours >= 0.5:
+  //     result.rating = 2
+  //     result.ratingDescription = 'You are doing good! Keep going!'
+  // }
 
   console.log(typeof (average / targetHours))
   console.log(average / targetHours)
