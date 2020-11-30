@@ -7,11 +7,15 @@
     "calculateBMI": "ts-node bmiCalculator.ts",
     "calculateExercise": "ts-node exerciseCalculator.ts",
     "start": "ts-node app.ts",
-    "dev": "ts-node-dev app.ts"
+    "dev": "ts-node-dev app.ts",
+    "lint": "eslint --ext .ts ."
   },
   "devDependencies": {
     "@types/express": "^4.17.9",
     "@types/node": "^14.14.9",
+    "@typescript-eslint/eslint-plugin": "^4.8.2",
+    "@typescript-eslint/parser": "^4.8.2",
+    "eslint": "^7.14.0",
     "ts-node": "^9.0.0",
     "ts-node-dev": "^1.0.0",
     "typescript": "^4.1.2"
