@@ -1,12 +1,12 @@
 import express from 'express'
 import calculateBMI from './bmiCalculator'
-const app = express()
+const app: any = express()
 
-app.get('/', (_req, res) => {
+app.get('/', (_req: any, res: any) => {
   res.send('Hello World!')
 })
 
-app.get('/bmi', (req, res) => {
+app.get('/bmi', (req: any, res: any) => {
   if (!req.query.height || !req.query.weight) {
     res.json({ error: 'malformatted parameters' })
   } else {
@@ -16,6 +16,12 @@ app.get('/bmi', (req, res) => {
       bmi: calculateBMI(Number(req.query.height), Number(req.query.weight)),
     })
   }
+})
+
+app.post('/exercises', (req: any, res: any) => {
+  const targetHours = req.body.targets
+
+  res.json({ status: 'ok', target: targetHours })
 })
 
 const PORT = 3001
